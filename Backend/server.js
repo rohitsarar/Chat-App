@@ -1,3 +1,4 @@
+import path from 'path';
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -13,6 +14,7 @@ dotenv.config();
 
 // Initialize express app
 const PORT = process.env.PORT || 5000;
+const __dirname=path.resolve();
 
 // Middleware to parse incoming JSON requests
 app.use(cors({
@@ -26,6 +28,12 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes);
+
+app.use(express.static(path.join(__dirname,"/Fronted/dist")))
+
+app.get('*',(req,res)=>{
+    res.sendFile(path.join(__dirname,"Fronted","disk","index.html"))
+})
 
 // Start server and connect to MongoDB
 server.listen(PORT, async () => {

@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "Server.js",
   "scripts": {
-    "server": "nodemon Backend/server.js"
+    "server": "nodemon Backend/server.js",
+    "start":"node Backend/server.js",
+    "build":"npm install && npm install --prefix Fronted  && npm run build --prefix Fronted"
   },
   "type": "module",
   "keywords": [],
