@@ -4,14 +4,13 @@
   "main": "Server.js",
   "scripts": {
     "server": "nodemon Backend/server.js",
-    "start":"node Backend/server.js",
-    "build":"npm install && npm install --prefix Fronted  && npm run build --prefix Fronted"
+    "start": "node Backend/server.js",
+    "build": "npm install && npm install --prefix Fronted && npm run build --prefix Fronted"
   },
   "type": "module",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
@@ -21,5 +20,8 @@
     "mongoose": "^8.7.2",
     "nodemon": "^3.1.7",
     "socket.io": "^4.8.0"
+  },
+  "devDependencies": {
+    "vite": "^4.0.0"
   }
 }
