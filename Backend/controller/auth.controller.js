@@ -4,28 +4,29 @@ import bcrypt from "bcryptjs";
 import User from '../models/user.models.js'; // Adjust the path as necessary
 import genrateTokenAndSetCookie from "../utils/generateToken.js";
 
+
+
 //signup
 export const signup = async (req, res) => {
     try {
-        const { fullName, username, password, confirmpassword, gender } = req.body;
+        const { fullName, username, password, confirmPassword, gender } = req.body;
 
         // Check if passwords match
-        if (password !== confirmpassword) {
+        if (password !== confirmPassword) {
+            console.log("Signup error: Passwords do not match");
             return res.status(400).json({ error: "Passwords do not match" });
         }
 
         // Check if username already exists
-        const user = await User.findOne({ username });
-        if (user) {
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            console.log("Signup error: Username already exists");
             return res.status(400).json({ error: "Username already exists" });
         }
 
-
-
-        const salt=await bcrypt.genSalt(10)
-        const hashedPassword=await bcrypt.hash(password,salt);
-
-
+        // Hash the password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         // Profile picture URLs based on gender
         const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
@@ -35,15 +36,14 @@ export const signup = async (req, res) => {
         const newUser = new User({
             fullName,
             username,
-            password:hashedPassword,
+            password: hashedPassword,
             gender,
             profilePic: gender === "male" ? boyProfilePic : girlProfilePic,
         });
 
         // Save new user to the database
-        if(newUser){
-         genrateTokenAndSetCookie(newUser._id,res);
         await newUser.save();
+        genrateTokenAndSetCookie(newUser._id, res);
 
         // Respond with user data
         res.status(201).json({
@@ -52,14 +52,13 @@ export const signup = async (req, res) => {
             username: newUser.username,
             profilePic: newUser.profilePic,
         });
-    }else{
-        res.status(400).json({error:"Invalid user data"})
-    }
+
     } catch (error) {
-        console.log("Error in signup controller", error.message);
+        console.error("Error in signup controller:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
 
 
 
